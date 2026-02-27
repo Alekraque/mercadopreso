@@ -26,4 +26,11 @@ public class PaymentController {
         Payment payment = paymentService.executePayment(paymentDto.toPayment());
         return ResponseEntity.status(HttpStatus.CREATED).body(PaymentResponseDto.fromPayment(payment));
     }
+
+
+    @PostMapping("/pre-authorize")
+    public ResponseEntity<PaymentResponseDto> preAuthorize(@RequestBody @Valid PaymentDto paymentDto) {
+        Payment payment = paymentService.executePayment(paymentDto.toPayment());
+        return ResponseEntity.status(HttpStatus.CREATED).body(PaymentResponseDto.fromPayment(payment));
+    }
 }

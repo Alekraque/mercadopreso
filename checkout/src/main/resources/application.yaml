@@ -1,3 +1,6 @@
 spring:
   application:
     name: checkout
+
+server:
+  port: 8082
