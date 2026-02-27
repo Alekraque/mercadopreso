@@ -1,5 +1,6 @@
 package com.mercadopreso.checkout.Gateway.Controllers;
 
+import com.mercadopreso.checkout.Gateway.Dtos.PaymentDto.PaymentResponseDto;
 import com.mercadopreso.checkout.Gateway.Dtos.PlaceOrderDto.PlaceOrderRequestDto;
 import com.mercadopreso.checkout.Services.PlaceOrderService;
 import jakarta.validation.Valid;
@@ -18,8 +19,11 @@ public class PlaceOrderController {
     private final PlaceOrderService placeOrderService;
 
     @PostMapping
-    public ResponseEntity<Void> placeOrder(@RequestBody @Valid PlaceOrderRequestDto placeOrderRequestDto) {
-        placeOrderService.placeOrder(placeOrderRequestDto.getCart(), placeOrderRequestDto.getPayment());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<PaymentResponseDto> placeOrder(@RequestBody @Valid PlaceOrderRequestDto placeOrderRequestDto) {
+        PaymentResponseDto paymentResponseDto = placeOrderService.placeOrder(
+                placeOrderRequestDto.getCart(),
+                placeOrderRequestDto.getPayment()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(paymentResponseDto);
     }
 }

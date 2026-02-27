@@ -2,8 +2,9 @@ package com.mercadopreso.checkout.Services;
 
 import com.mercadopreso.checkout.Domains.Item;
 import com.mercadopreso.checkout.Domains.Order;
+import com.mercadopreso.checkout.Gateway.Dtos.PaymentDto.PaymentRequestDto;
+import com.mercadopreso.checkout.Gateway.Dtos.PaymentDto.PaymentResponseDto;
 import com.mercadopreso.checkout.Gateway.Dtos.PlaceOrderDto.CartDto;
-import com.mercadopreso.checkout.Gateway.Dtos.PlaceOrderDto.PaymentDto;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @Service
 public class PlaceOrderService {
-    public void placeOrder(CartDto cart, PaymentDto payment) {
+    public PaymentResponseDto placeOrder(CartDto cart, PaymentRequestDto payment) {
         String orderId = UUID.randomUUID().toString();
         List<Item> items = cart.getItems();
         BigDecimal itemsTotal = items.stream()
@@ -24,10 +25,10 @@ public class PlaceOrderService {
                 .userId(cart.getUserId())
                 .items(items)
                 .finalPrice(itemsTotal.add(cart.getFreight()))
-                .status("CREATED")
+                .status(payment.getStatus())
                 .paymentId(payment.getId())
                 .build();
 
-        // TODO persistir pedido e publicar evento para os próximos serviços.
+        return PaymentResponseDto.fromPaymentRequest(payment);
     }
 }
