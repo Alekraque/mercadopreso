@@ -1,7 +1,6 @@
-package com.mercadopreso.checkout.Gateway.client;
+package com.mercadopreso.checkout.Gateway.client.payment;
 
-import com.mercadopreso.checkout.Gateway.Dtos.PaymentDto.PaymentRequestDto;
-import com.mercadopreso.checkout.Gateway.Dtos.PaymentDto.PaymentResponseDto;
+import com.mercadopreso.checkout.Gateway.Dtos.PlaceOrderDto.PaymentRequestDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PaymentClient {
 
     @PostMapping("/payment/pre-authorize")
-    PaymentResponseDto preAuthorize(
+    PaymentRequestDto preAuthorize(
             @RequestBody PaymentRequestDto payment
     );
 }

@@ -25,4 +25,9 @@ public class CartDto {
 
     @NotNull(message = "freight é obrigatório")
     private BigDecimal freight;
+
+    @NotNull(message = "paymentId é obrigatório")
+    private String paymentId;
 }
+
+
