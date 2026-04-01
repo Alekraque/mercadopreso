@@ -1,6 +1,8 @@
 package com.mercadopreso.order.Config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +26,11 @@ public class RabbitMqConfig {
                 .to(orderExchange)
                 .with("fernando-rk")
                 .noargs();
+    }
+
+    @Bean
+    public MessageConverter jsonMessageConverter() {
+        return new JacksonJsonMessageConverter();
     }
 
 }
