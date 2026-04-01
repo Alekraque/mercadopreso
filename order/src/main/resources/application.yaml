@@ -5,11 +5,12 @@ spring:
   application:
     name: order
 
-  datasource:
-    url:  jdbc:h2:mem:mercadopreso_db
-    driver-class-name: org.h2.Driver
-    username: admin
+  rabbitmq:
+    virtual-host: order
     password: admin
+    username: admin
+    host: 10.3.170.100
+    port: 5672
 
   h2:
     console:

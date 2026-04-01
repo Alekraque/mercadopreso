@@ -2,10 +2,9 @@ package com.mercadopreso.order.Services;
 
 import com.mercadopreso.order.Domains.Enums.OrderStatus;
 import com.mercadopreso.order.Domains.Order;
-import com.mercadopreso.order.Gateway.ShippingGateway;
-import com.mercadopreso.order.Repository.Interfaces.OrderRepositoryInterface;
 import com.mercadopreso.order.Services.Interfaces.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -14,8 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderRepositoryInterface orderRepository;
-    private final ShippingGateway shippingGateway;
+    private final RabbitTemplate rabbitTemplate;
 
     public Order createOrder(Order order) {
         Order createdOrder = Order.builder()
@@ -27,10 +25,8 @@ public class OrderServiceImpl implements OrderService {
                 .paymentId(order.getPaymentId())
                 .build();
 
-        Order savedOrder = orderRepository.save(createdOrder);
+        rabbitTemplate.convertAndSend("fernando-ex", "fernando-rk", createdOrder);
 
-        //shippingGateway.notifyShipping(savedOrder);
-
-        return savedOrder;
+        return createdOrder;
     }
 }
