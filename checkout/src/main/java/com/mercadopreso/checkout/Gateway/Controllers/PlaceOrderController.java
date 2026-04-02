@@ -1,9 +1,9 @@
 package com.mercadopreso.checkout.Gateway.Controllers;
 
-import com.mercadopreso.checkout.Gateway.Dtos.PaymentDto.PaymentRequestDto;
-import com.mercadopreso.checkout.Gateway.Dtos.PaymentDto.PaymentResponseDto;
+import com.mercadopreso.checkout.Gateway.Dtos.PlaceOrderDto.PaymentRequestDto;
+import com.mercadopreso.checkout.Gateway.Dtos.PlaceOrderDto.CartDto;
 import com.mercadopreso.checkout.Gateway.Dtos.PlaceOrderDto.PlaceOrderRequestDto;
-import com.mercadopreso.checkout.Gateway.client.PaymentClient;
+import com.mercadopreso.checkout.Gateway.client.payment.PaymentClient;
 import com.mercadopreso.checkout.Services.PlaceOrderService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -16,31 +16,27 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/place-order")
+@RequestMapping("/checkout")
 public class PlaceOrderController {
     private final PlaceOrderService placeOrderService;
     private final PaymentClient paymentClient;
 
-    @PostMapping
-    public ResponseEntity<PaymentResponseDto> placeOrder(@RequestBody @Valid PlaceOrderRequestDto placeOrderRequestDto) {
-        PaymentResponseDto paymentResponseDto = placeOrderService.placeOrder(
-                placeOrderRequestDto.getCart(),
-                placeOrderRequestDto.getPayment()
+    @PostMapping("/place-order")
+    public ResponseEntity<CartDto> placeOrder(@RequestBody @Valid PlaceOrderRequestDto placeOrderRequestDto) {
+        CartDto cartDto = placeOrderService.placeOrder(
+                placeOrderRequestDto.getCart()
         );
-        return ResponseEntity.status(HttpStatus.CREATED).body(paymentResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartDto);
     }
 
 
-    @GetMapping("/checkout-pre-authorize")
-    public PaymentResponseDto preAuthorizePayment() {
-        PaymentResponseDto paymentResponseDto = paymentClient.preAuthorize(
-                PaymentRequestDto.builder()
-                        .type("CARTAO_CREDITO")
-                        .gateway("PAGSEGURO")
-                        .amount(BigDecimal.valueOf(100L))
-                        .userId(UUID.randomUUID().toString())
-                        .build()
-        );
-        return paymentResponseDto;
-    }
+        @PostMapping("/checkout-pre-authorize")
+        public PaymentRequestDto preAuthorizePayment() {
+            return paymentClient.preAuthorize(
+                    PaymentRequestDto.builder()
+                            .paymentId(UUID.randomUUID().toString())
+                            .finalPrice(BigDecimal.TEN)
+                            .build()
+            );
+        }
 }
